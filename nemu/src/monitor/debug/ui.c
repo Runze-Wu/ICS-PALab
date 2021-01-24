@@ -32,12 +32,56 @@ static int cmd_c(char *args) {
 	return 0;
 }
 
-
 static int cmd_q(char *args) {
 	return -1;
 }
 
 static int cmd_help(char *args);
+
+static int cmd_si(char *args){
+	uint64_t steps = 0;
+	if(args == NULL)
+		steps = 1;
+	else{
+		sscanf(args,"%ld",&steps);
+	}
+	cpu_exec(steps);
+	return 0;
+}
+
+static int cmd_info(char *args){
+	char tar;
+	if(args==NULL)
+		tar ='r';
+	switch(tar) {
+		case 'r': // display the registers
+			printf("display the registers\n");
+			isa_reg_display();
+			break;
+		case 'w': // display the watchpoints
+			printf("display the watchpoints\n");
+			break;
+		default:
+			printf("cmd info illegal args:%s\n",args);
+	}
+	return 0;
+}
+
+static int cmd_p(char *args){
+	return -1;
+}
+
+static int cmd_x(char *args){
+	return -1;
+}
+
+static int cmd_w(char *args){
+	return -1;
+}
+
+static int cmd_d(char *args){
+	return -1;
+}
 
 static struct {
 	char *name;
@@ -49,6 +93,12 @@ static struct {
 	{ "q", "Exit NEMU", cmd_q },
 
 	/* TODO: Add more commands */
+	{"si", "Run the next N lines of the program", cmd_si}, // si [N]
+	{"info", "Display the info of registers or watchpoint",cmd_info}, // info SUBCMD 
+	{"p","Prints the current value of the EXPR", cmd_p}, // p EXPR
+	{"x","Display N 4bytes in the EXPR memory",cmd_x}, // x N EXPR
+	{"w","Set watchpoint in the EXPR memory",cmd_w}, // w EXPR
+	{"d","Delete watchpoint with the number N",cmd_d} // d N
 
 };
 
